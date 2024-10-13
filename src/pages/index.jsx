@@ -88,6 +88,43 @@ function Index({ initialSettings, fallback }) {
   const { data: errorsData } = useSWR("/api/validate");
   const { data: hashData, mutate: mutateHash } = useSWR("/api/hash");
 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(true);
+  // TODO: check by settings, not show here
+  let correctPassword = "123"; // Replace with your password
+  let hasIndexCheck = false;
+
+  const { settings } = useContext(SettingsContext);
+
+
+  if (settings.indexPassword !== undefined) {
+    correctPassword = settings.indexPassword;
+    hasIndexCheck = true;
+  }
+
+  useEffect(() => {
+    const authStatus = localStorage.getItem("isAuthenticated");
+    if (authStatus === "true") {
+      setIsAuthenticated(true);
+    }
+    setLoading(false);
+  }, []);
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handlePasswordSubmit = () => {
+    if (password === correctPassword) {
+      setIsAuthenticated(true);
+      localStorage.setItem("isAuthenticated", "true");
+    } else {
+      // TODO: better show message
+      alert("Incorrect password");
+    }
+  };
+
   useEffect(() => {
     if (windowFocused) {
       mutateHash();
@@ -117,6 +154,14 @@ function Index({ initialSettings, fallback }) {
     }
   }, [hashData]);
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="w-24 h-24 border-2 border-theme-400 border-solid rounded-full animate-spin border-t-transparent" />
+      </div>
+    );
+  }
+
   if (stale) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -144,6 +189,20 @@ function Index({ initialSettings, fallback }) {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (hasIndexCheck && !isAuthenticated) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="p-4 bg-white rounded shadow-md">
+          <h2 className="mb-4 text-lg font-bold">Enter Password</h2>
+          <input type="password" value={password} onChange={handlePasswordChange} className="p-2 border rounded mb-4" />
+          <button type="button" onClick={handlePasswordSubmit} className="p-2 bg-blue-500 text-white rounded">
+            Submit
+          </button>
         </div>
       </div>
     );
