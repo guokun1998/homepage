@@ -198,7 +198,7 @@ function Index({ initialSettings, fallback }) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="p-4 bg-white rounded shadow-md">
-          <h2 className="mb-4 text-lg font-bold">Enter Password</h2>
+          <h2 className="mb-4 text-lg font-bold">show me the code</h2>
           <input type="password" value={password} onChange={handlePasswordChange} className="p-2 border rounded mb-4" />
           <button type="button" onClick={handlePasswordSubmit} className="p-2 bg-blue-500 text-white rounded">
             Submit
