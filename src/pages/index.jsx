@@ -94,9 +94,7 @@ function Index({ initialSettings, fallback }) {
   // TODO: check by settings, not show here
   let correctPassword = "123"; // Replace with your password
   let hasIndexCheck = false;
-
   const { settings } = useContext(SettingsContext);
-
 
   if (settings.indexPassword !== undefined) {
     correctPassword = settings.indexPassword;
